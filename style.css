@@ -23,7 +23,6 @@
         }
         .portfolio {
             display: flex;
-            flex-wrap: wrap;
             justify-content: center;
             gap: 2rem;
             margin: 3rem 0;
