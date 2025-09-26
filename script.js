@@ -43,3 +43,31 @@
             requestAnimationFrame(animateStars);
         }
         animateStars();
+
+document.addEventListener('DOMContentLoaded', function() {
+      var calendarEl = document.getElementById('calendar');
+      
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',   // Month view
+        selectable: true,              // Allow selecting dates
+        editable: true,                // Drag & drop events
+        headerToolbar: {               // Navigation buttons
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        events: [
+          { title: 'Meeting', start: '2025-09-10' },
+          { title: 'Conference', start: '2025-09-15', end: '2025-09-17' },
+          { title: 'Webinar', start: '2025-09-22T14:00:00' }
+        ],
+        dateClick: function(info) {
+          alert('You clicked on: ' + info.dateStr);
+        },
+        eventClick: function(info) {
+          alert('Event: ' + info.event.title);
+        }
+      });
+
+      calendar.render();
+    });
