@@ -1,0 +1,67 @@
+        body {
+            margin: 0;
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+            color: #fff;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            overflow-x: hidden;
+        }
+        header {
+            text-align: center;
+            padding: 3rem 1rem 2rem 1rem;
+            position: relative;
+            z-index: 2;
+        }
+        h1 {
+            font-size: 3rem;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 20px #fff, 0 0 40px #0ff;
+        }
+        p {
+            font-size: 1.2rem;
+            color: #b0c4de;
+        }
+        .portfolio {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            margin: 3rem 0;
+            z-index: 2;
+            position: relative;
+        }
+        .card {
+            background: rgba(30, 40, 60, 0.8);
+            border-radius: 1rem;
+            box-shadow: 0 0 30px #222;
+            padding: 2rem;
+            width: 300px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 0 50px #0ff;
+        }
+        .card-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #fff;
+            text-shadow: 0 0 10px #0ff;
+        }
+        .card-desc {
+            color: #b0c4de;
+        }
+        #starfield {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+        @media (max-width: 600px) {
+            h1 { font-size: 2rem; }
+            .portfolio { flex-direction: column; align-items: center; }
+            .planet { width: 80px; height: 80px; right: 10px; }
+        }
