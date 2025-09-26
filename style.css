@@ -1,100 +1,124 @@
-        body {
-            margin: 0;
-            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
-            color: #fff;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            overflow-x: hidden;
-        }
-        header {
-            text-align: center;
-            padding: 3rem 1rem 2rem 1rem;
-            position: relative;
-            z-index: 2;
-        }
-        h1 {
-            font-size: 3rem;
-            letter-spacing: 0.1em;
-            margin-bottom: 0.5rem;
-            text-shadow: 0 0 20px #fff, 0 0 40px #0ff;
-        }
-        p {
-            font-size: 1.2rem;
-            color: #b0c4de;
-        }
-        .portfolio {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin: 3rem 0;
-            z-index: 2;
-            position: relative;
-        }
-        .card {
-            background: rgba(30, 40, 60, 0.8);
-            border-radius: 1rem;
-            box-shadow: 0 0 30px #222;
-            padding: 2rem;
-            width: 300px;
-            transition: transform 0.3s, box-shadow 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-        .card:hover {
-            transform: translateY(-10px) scale(1.05);
-            box-shadow: 0 0 50px #0ff;
-        }
-        .card-title {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: #fff;
-            text-shadow: 0 0 10px #0ff;
-        }
-        .card-desc {
-            color: #b0c4de;
-        }
-        #starfield {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            z-index: 0;
-            pointer-events: none;
-        }
-        @media (max-width: 600px) {
-            h1 { font-size: 2rem; }
-            .portfolio { flex-direction: column; align-items: center; }
-            .planet { width: 80px; height: 80px; right: 10px; }
-        }
+body {
+    margin: 0;
+    background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+    color: #fff;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    overflow-x: hidden;
+}
+
+header {
+    text-align: center;
+    padding: 3rem 1rem 2rem 1rem;
+    position: relative;
+    z-index: 2;
+}
+
+h1 {
+    font-size: 3rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 20px #fff, 0 0 40px #0ff;
+}
+
+p {
+    font-size: 1.2rem;
+    color: #b0c4de;
+}
+
+.portfolio {
+    display: flex;
+    flex-direction: column; /* stack items vertically */
+    align-items: center;   /* center them horizontally */
+    gap: 2rem;             /* space between cards */
+    margin: 3rem 0;
+    z-index: 2;
+    position: relative;
+}
+.card {
+    width: 90%;  /* make them wider when stacked (optional) */
+    max-width: 500px; /* limit max size */
+}
+
+
+.card:hover {
+    transform: translateY(-10px) scale(1.05);
+}
+
+.card-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #fff;
+    text-shadow: 0 0 10px #0ff;
+}
+
+.card-desc {
+    color: #b0c4de;
+}
+
 h2 {
     text-align: center;
     margin-bottom: 20px;
 }
+
+/* ===== Calendar Styling ===== */
 #calendar {
-    max-width: 900px;
-    margin: auto;
-    background: rgba(255, 255, 255, 0.2); /* transparent background */
-    padding: 15px;
-    border-radius: 8px;
-    backdrop-filter: blur(10px); /* applies blur to background behind */
-    -webkit-backdrop-filter: blur(10px); /* Safari support */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    color: #fff; /* since bg is transparent, make text readable */
+    max-width: 100%;
+    background: rgba(10, 15, 30, 0.9);
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,255,255,0.5);
+    color: #fff;
 }
 
-
-.fc-toolbar-title {
-  color: #0ff !important;
-  text-shadow: 0 0 8px #0ff;
-  font-size: 1.5rem;
+.fc .fc-toolbar-title {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #0ff;
+    text-shadow: 0 0 10px #0ff;
 }
 
-.fc-col-header-cell {
-  background: rgba(0, 255, 255, 0.15);
-  color: #fff;
-  text-shadow: 0 0 5px #0ff;
-  font-weight: bold;
+.fc .fc-daygrid-day-number {
+    color: #fff;
 }
 
-.fc-daygrid-day-number {
-  color: #fff;
+.fc .fc-event {
+    background: #0ff;
+    border: none;
+    color: #000;
+    font-size: 0.8rem;
+    padding: 2px 4px;
+    border-radius: 4px;
 }
 
+/* ===== Background Layers ===== */
+#blackholeCanvas {
+    position: fixed;
+    top: 0; 
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0; /* sits behind stars */
+    background: radial-gradient(ellipse at center, #000 20%, #0a0a0f 100%);
+}
+
+#starfield {
+    position: fixed;
+    top: 0; 
+    left: 0;
+    width: 100%; 
+    height: 100%;
+    z-index: 1; /* sits above blackhole */
+    pointer-events: none;
+}
+
+header, .portfolio {
+    position: relative;
+    z-index: 2; /* content above effects */
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 600px) {
+    h1 { font-size: 2rem; }
+    .portfolio { flex-direction: column; align-items: center; }
+    .planet { width: 80px; height: 80px; right: 10px; }
+}
