@@ -122,3 +122,12 @@ header, .portfolio {
     .portfolio { flex-direction: column; align-items: center; }
     .planet { width: 80px; height: 80px; right: 10px; }
 }
+#event-details {
+  min-width: 250px;
+  box-shadow: 0 0 15px cyan;
+  font-family: Arial, sans-serif;
+}
+#event-details h2 {
+  color: cyan;
+  margin-bottom: 10px;
+}

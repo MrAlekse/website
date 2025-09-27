@@ -25,14 +25,19 @@
 
     <section class="portfolio">
 
-        <div class="card">
-            <div class="card-title">
-                <h2>📅 Calendar</h2>
+        <div style="display: flex; gap: 20px;">
+            <!-- Calendar -->
+            <div id="calendar" style="flex: 2;"></div>
+
+            <!-- Event details panel -->
+            <div id="event-details" style="flex: 1; background: rgba(0,0,0,0.6); padding: 20px; border-radius: 12px; color: #fff;">
+                <h2>📋 Event Details</h2>
+                <p id="event-title">Select an event</p>
+                <p id="event-date"></p>
+                <p id="event-description"></p>
             </div>
-            <div class="card-desc">
-                <div id="calendar"></div>
             </div>
-        </div>
+
 
         <div class="card">
             <div class="card-title"><h2></h2></div>

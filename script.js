@@ -48,64 +48,54 @@ animateStars();
 
 
 // 📅 CALENDAR CODE (unchanged)
-document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        selectable: true,
-        editable: true,
-        headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay'
-        },
-        dateClick: function(info) {
-            alert('You clicked on: ' + info.dateStr);
-        },
-        eventClick: function(info) {
-            alert('Event: ' + info.event.title);
-        }
-    });
-    calendar.render();
-});
-
-//calendar edit/remove events
 document.addEventListener('DOMContentLoaded', function () {
-    var calendarEl = document.getElementById('calendar');
+  var calendarEl = document.getElementById('calendar');
 
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-      initialView: 'dayGridMonth',
-      selectable: true,
-      editable: true,
+  var calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'dayGridMonth',
+    selectable: true,
+    editable: true,
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek,timeGridDay'
+    },
 
-      headerToolbar: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'dayGridMonth,timeGridWeek,timeGridDay'
-      },
-
-      // ✅ Add new events on date click
-      dateClick: function(info) {
-        let title = prompt("Enter event title:");
-        if (title) {
-          calendar.addEvent({
-            title: title,
-            start: info.dateStr,
-            allDay: true
-          });
-        }
-      },
-
-      // ❌ Remove events on click
-      eventClick: function(info) {
-        if (confirm(`Remove event: "${info.event.title}"?`)) {
-          info.event.remove();
-        }
+    // ✅ Add new events on date click
+    dateClick: function(info) {
+      let title = prompt("Enter event title:");
+      if (title) {
+        let desc = prompt("Enter event description (optional):");
+        calendar.addEvent({
+          title: title,
+          start: info.dateStr,
+          allDay: true,
+          description: desc || "No description added"
+        });
       }
-    });
+    },
 
-    calendar.render();
+    // ✅ Show details in right panel + option to remove
+    eventClick: function(info) {
+      // Update sidebar with details
+      document.getElementById('event-title').innerText = "📌 " + info.event.title;
+      document.getElementById('event-date').innerText = "🗓 " + info.event.start.toDateString();
+      document.getElementById('event-description').innerText =
+        "📝 " + (info.event.extendedProps.description || "No description available");
+
+      // Ask if user wants to delete
+      if (confirm(`Do you want to remove event: "${info.event.title}"?`)) {
+        info.event.remove();
+        // Reset sidebar after removal
+        document.getElementById('event-title').innerText = "Select an event";
+        document.getElementById('event-date').innerText = "";
+        document.getElementById('event-description').innerText = "";
+      }
+    }
   });
+
+  calendar.render();
+});
 
 
 // 🌌 BLACKHOLE CANVAS
