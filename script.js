@@ -34,7 +34,7 @@ class Particle {
         ctx.fill();
     } 
    update() {
-    // Bounce off edges
+    // bounce off canvas edges
     if (this.x > canvas.width || this.x < 0) {
         this.directionX = -this.directionX;
     }
@@ -42,9 +42,22 @@ class Particle {
         this.directionY = -this.directionY;
     }
 
-    // Gentle random motion
-    this.x += this.directionX * 0.3; // smaller = slower, smoother
-    this.y += this.directionY * 0.3;
+    // distance from mouse
+    let dx = mouse.x - this.x;
+    let dy = mouse.y - this.y;
+    let distance = Math.sqrt(dx * dx + dy * dy);
+
+    // gentle attraction zone
+    if (distance < mouse.radius && distance > 0) {
+        // strength weakens with distance
+        const attraction = (1 - distance / mouse.radius) * 0.3; // lower = calmer
+        this.x += dx * attraction;
+        this.y += dy * attraction;
+    }
+
+    // normal floating movement
+    this.x += this.directionX * 0.2; // slow drifting
+    this.y += this.directionY * 0.2;
 
     this.draw();
 }
@@ -55,15 +68,16 @@ function init() {
     particlesArray = [];
     let numberOfParticles = (canvas.height * canvas.width) / 15000;
     for (let i = 0; i < numberOfParticles; i++) {
-        let size = (Math.random() * 3) + 1;
+        let size = (Math.random() * 5) + 1;
         let x = Math.random() * canvas.width;
         let y = Math.random() * canvas.height;
-        let directionX = (Math.random() * 1) - 0.5;
+        let directionX = (Math.random() * 1) - 0.5; // small movement
         let directionY = (Math.random() * 1) - 0.5;
         let color = '#000000ff';
         particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
     }
 }
+
 
 function connect() {
     let opacityValue = 1;
@@ -72,14 +86,17 @@ function connect() {
             let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x)) +
                            ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
             if (distance < (canvas.width / 7) * (canvas.height / 7)) {
-                opacityValue = 1 - (distance / 20000);
-                ctx.strokeStyle = 'rgba(140, 85, 31,' + opacityValue +  ')';
+                // make opacity decrease smoothly with distance
+                opacityValue = 1 - distance / ((canvas.width / 7) * (canvas.height / 7));
+                if (opacityValue < 0) opacityValue = 0;
+                
+                ctx.strokeStyle = `rgba(255, 255, 255, ${opacityValue})`; // white fading lines
                 ctx.lineWidth = 1;
                 ctx.beginPath();
                 ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
-                ctx.strokeStyle = '#ffffffff'; // Change this to any color you want
                 ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
                 ctx.stroke();
+                ctx.lineWidth = opacityValue * 1 + 0.5; // Stroke size varies with opacity (distance)
                 ctx.closePath();
             }
         }
@@ -88,7 +105,6 @@ function connect() {
 function animate() {
     requestAnimationFrame(animate);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
     for (let i = 0; i < particlesArray.length; i++) {
         particlesArray[i].update();
     }
