@@ -68,6 +68,12 @@ h2 {
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(0,255,255,0.5);
     color: #fff;
+    flex: 2;
+}
+#calender-container {
+    display: flex;
+    gap: 20px;
+    width: 100%;
 }
 
 .fc .fc-toolbar-title {
@@ -123,9 +129,15 @@ header, .portfolio {
     .planet { width: 80px; height: 80px; right: 10px; }
 }
 #event-details {
-  min-width: 250px;
-  box-shadow: 0 0 15px cyan;
-  font-family: Arial, sans-serif;
+    min-width: 250px;
+    box-shadow: 0 0 15px cyan;
+    font-family: Arial, sans-serif;
+    flex: 1; 
+    background: rgba(0,0,0,0.6);
+    padding: 20px; 
+    border-radius: 12px; 
+    color: #fff;
+    float: right;
 }
 #event-details h2 {
   color: cyan;
