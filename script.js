@@ -162,3 +162,19 @@ const words = ["FullStack Developer", "Web Developer", "App Developer", "Program
   }
 
   type();
+
+const menuToggle = document.getElementById('menu-toggle');
+const navLinks = document.querySelector('.nav-links');
+
+menuToggle.addEventListener('click', () => {
+  navLinks.classList.toggle('open');
+  menuToggle.classList.toggle('active');
+});
+
+// Optional: Animate hamburger into X
+menuToggle.addEventListener('click', () => {
+  const bars = menuToggle.querySelectorAll('div');
+  bars[0].classList.toggle('rotate-top');
+  bars[1].classList.toggle('hide-middle');
+  bars[2].classList.toggle('rotate-bottom');
+});
