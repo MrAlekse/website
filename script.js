@@ -126,3 +126,20 @@ window.addEventListener('mouseout', function() {
 
 init();
 animate();
+
+const words = ["coding", "design", "learning", "creating", "exploring"];
+  let index = 0;
+
+  const wordElement = document.getElementById("word");
+
+  function cycleWord() {
+    wordElement.style.opacity = 0; // fade out
+    setTimeout(() => {
+      index = (index + 1) % words.length; // move to next word
+      wordElement.textContent = words[index];
+      wordElement.style.opacity = 1; // fade in
+    }, 500);
+  }
+
+  // change word every 2 seconds
+  setInterval(cycleWord, 2000);
