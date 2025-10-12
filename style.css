@@ -107,6 +107,13 @@ nav {
     1px  1px 0 #2b00ff;
   transition: opacity 0.5s ease;
 }
+#about p {
+  margin-top: 1rem;
+  text-align: justify;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #e0e0e0;
+}
 
 /* === PROFILE IMAGE === */
 .profile-pic {
