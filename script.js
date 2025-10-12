@@ -178,3 +178,5 @@ menuToggle.addEventListener('click', () => {
   bars[1].classList.toggle('hide-middle');
   bars[2].classList.toggle('rotate-bottom');
 });
+
+//about section animation
