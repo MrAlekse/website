@@ -50,7 +50,7 @@ class Particle {
     // gentle attraction zone
     if (distance < mouse.radius && distance > 0) {
         // strength weakens with distance
-        const attraction = (1 - distance / mouse.radius) * 0.3; // lower = calmer
+        const attraction = (1 - distance / mouse.radius) * 0.03; // lower = calmer
         this.x += dx * attraction;
         this.y += dy * attraction;
     }
@@ -127,19 +127,38 @@ window.addEventListener('mouseout', function() {
 init();
 animate();
 
-const words = ["coding", "design", "learning", "creating", "exploring"];
-  let index = 0;
-
+const words = ["FullStack Developer", "Web Developer", "App Developer", "Programer", "Frontend Developer", "Video Editor", "Graphic Designer", "Photographer", "Power Point Designer"];
   const wordElement = document.getElementById("word");
 
-  function cycleWord() {
-    wordElement.style.opacity = 0; // fade out
-    setTimeout(() => {
-      index = (index + 1) % words.length; // move to next word
-      wordElement.textContent = words[index];
-      wordElement.style.opacity = 1; // fade in
-    }, 500);
+  let wordIndex = 0;
+  let letterIndex = 0;
+  let isDeleting = false;
+
+  function type() {
+    const currentWord = words[wordIndex];
+    const displayed = currentWord.substring(0, letterIndex);
+    wordElement.textContent = displayed;
+
+    if (!isDeleting && letterIndex < currentWord.length) {
+      // typing forward
+      letterIndex++;
+      setTimeout(type, 150);
+    } else if (isDeleting && letterIndex > 0) {
+      // deleting
+      letterIndex--;
+      setTimeout(type, 100);
+    } else {
+      if (!isDeleting) {
+        // pause before deleting
+        isDeleting = true;
+        setTimeout(type, 1000);
+      } else {
+        // move to next word
+        isDeleting = false;
+        wordIndex = (wordIndex + 1) % words.length;
+        setTimeout(type, 200);
+      }
+    }
   }
 
-  // change word every 2 seconds
-  setInterval(cycleWord, 2000);
+  type();
