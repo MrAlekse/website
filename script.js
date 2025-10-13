@@ -113,18 +113,36 @@ function animate() {
 }
 
 
-window.addEventListener('resize', function() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    mouse.radius = ((canvas.height / 80) * (canvas.width / 80));
-    init();
-});
-window.addEventListener('mouseout', function() {
-    mouse.x = undefined;
-    mouse.y = undefined;
-});
+function resizeCanvas() {
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+
+  // Set canvas resolution
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = width * dpr;
+  canvas.height = height * dpr;
+  canvas.style.width = width + 'px';
+  canvas.style.height = height + 'px';
+
+  // Reset transform before scaling to avoid compounding
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.scale(dpr, dpr);
+
+  // Adjust mouse radius (use logical pixels)
+  mouse.radius = ((height / 80) * (width / 80));
 
 init();
+
+}
+resizeCanvas();
+
+// 🔁 Listen for resize
+window.addEventListener('resize', resizeCanvas);
+
+// ✅ Optional: handle mobile orientation changes too
+window.addEventListener('orientationchange', () => {
+  setTimeout(resizeCanvas, 500);
+});
 animate();
 
 const words = ["FullStack Developer", "Web Developer", "App Developer", "Programer", "Frontend Developer", "Video Editor", "Graphic Designer", "Photographer", "Power Point Designer"];
