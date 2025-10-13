@@ -214,23 +214,3 @@ document.addEventListener("DOMContentLoaded", () => {
 
   observer.observe(aboutSection);
 });
-
-let lastScrollY = 0;
-
-function handleScroll() {
-  const scrollTop = window.scrollY || document.documentElement.scrollTop;
-  const maxBlur = 8; // keep it lighter for mobile GPU
-  const blurValue = Math.min(scrollTop / 60, maxBlur);
-  const opacityValue = Math.max(1 - scrollTop / 800, 0.4); // optional fade
-
-  const canvas = document.querySelector('canvas');
-  canvas.style.filter = `blur(${blurValue}px)`;
-  canvas.style.opacity = opacityValue;
-}
-
-window.addEventListener('scroll', () => {
-  if (Math.abs(window.scrollY - lastScrollY) > 1) {
-    lastScrollY = window.scrollY;
-    requestAnimationFrame(handleScroll);
-  }
-});
