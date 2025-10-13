@@ -107,8 +107,12 @@ nav {
 
 .word {
   color: #38bdf8;
-  -webkit-text-stroke: 1px #2f77ab;
   
+  text-shadow:
+    -1px -1px 0 #2b00ff,
+    1px -1px 0 #2b00ff,
+    -1px  1px 0 #2b00ff,
+    1px  1px 0 #2b00ff;
   transition: opacity 0.5s ease;
 }
 /* About Section Styling */
