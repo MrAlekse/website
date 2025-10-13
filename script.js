@@ -50,14 +50,14 @@ class Particle {
     // gentle attraction zone
     if (distance < mouse.radius && distance > 0) {
         // strength weakens with distance
-        const attraction = (1 - distance / mouse.radius) * 0.03; // lower = calmer
+        const attraction = (1 - distance / mouse.radius) * 0.003; // lower = calmer
         this.x += dx * attraction;
         this.y += dy * attraction;
     }
 
     // normal floating movement
-    this.x += this.directionX * 0.2; // slow drifting
-    this.y += this.directionY * 0.2;
+    this.x += this.directionX * 0.03; // slow drifting
+    this.y += this.directionY * 0.03;
 
     this.draw();
 }
@@ -66,13 +66,13 @@ class Particle {
 
 function init() {
     particlesArray = [];
-    let numberOfParticles = (canvas.height * canvas.width) / 15000;
+    let numberOfParticles = (canvas.height * canvas.width) / 19000;
     for (let i = 0; i < numberOfParticles; i++) {
         let size = (Math.random() * 5) + 1;
         let x = Math.random() * canvas.width;
         let y = Math.random() * canvas.height;
-        let directionX = (Math.random() * 1) - 0.5; // small movement
-        let directionY = (Math.random() * 1) - 0.5;
+        let directionX = (Math.random() * 3) - 0.15; // small movement
+        let directionY = (Math.random() * 3) - 0.15;
         let color = '#000000ff';
         particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
     }
@@ -198,3 +198,39 @@ menuToggle.addEventListener('click', () => {
 });
 
 //about section animation
+
+document.addEventListener("DOMContentLoaded", () => {
+  const aboutSection = document.querySelector("#about");
+  if (!aboutSection) return;
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        aboutSection.classList.add("show");
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.05 }); // triggers earlier
+
+  observer.observe(aboutSection);
+});
+
+let lastScrollY = 0;
+
+function handleScroll() {
+  const scrollTop = window.scrollY || document.documentElement.scrollTop;
+  const maxBlur = 8; // keep it lighter for mobile GPU
+  const blurValue = Math.min(scrollTop / 60, maxBlur);
+  const opacityValue = Math.max(1 - scrollTop / 800, 0.4); // optional fade
+
+  const canvas = document.querySelector('canvas');
+  canvas.style.filter = `blur(${blurValue}px)`;
+  canvas.style.opacity = opacityValue;
+}
+
+window.addEventListener('scroll', () => {
+  if (Math.abs(window.scrollY - lastScrollY) > 1) {
+    lastScrollY = window.scrollY;
+    requestAnimationFrame(handleScroll);
+  }
+});
