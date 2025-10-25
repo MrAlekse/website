@@ -234,50 +234,118 @@ section h2::after {
 }
 
 /* === PROJECTS === */
-.project-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-  margin-top: 3rem;
+#projects {
+  text-align: center;
+  padding: 5rem 2rem;
+  position: relative;
+  overflow: hidden;
 }
 
-.project-item {
+#projects h2 {
+  font-size: 2.5rem;
+  color: #38bdf8;
+  margin-bottom: 3rem;
+  text-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+}
+
+.scroll-gallery {
+  display: flex;
+  gap: 2rem;
+  width: max-content;
+  transform: translateX(0);
+  transition: transform 0.1s linear;
+  will-change: transform;
+  cursor: grab;
+}
+.scroll-gallery:active {
+  cursor: grabbing;
+}
+
+.project-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 280px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 12px;
-  padding: 2rem;
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 0 15px rgba(0,0,0,0.3);
+  padding: 1rem;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
   transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
 }
 
-.project-item:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 0 20px rgba(0,212,255,0.6);
+
+.project-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-bottom: 2px solid #38bdf8;
+  border-radius: 10px;
+}
+
+.project-card h3 {
+  color: #fff;
+  font-size: 1.2rem;
+  margin: 1rem 0;
+  text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+}
+
+.project-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
+}
+@keyframes floatScroll {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(8px); }
+  100% { transform: translateY(0px); }
 }
 
 /* === SKILLS === */
 .skills-list {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-between; /* spreads items across left → right */
   gap: 1rem;
-  margin-top: 2rem;
   list-style: none;
+  padding: 0;
+  margin: 2rem 0 0;
 }
 
 .skills-list li {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.08);
   padding: 0.8rem 1.5rem;
   border-radius: 25px;
   font-weight: 500;
-  transition: background 0.3s, transform 0.3s;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(0, 212, 255, 0.25);
+  box-shadow: 0 0 12px rgba(0, 212, 255, 0.15);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  flex: 1 1 calc(30% - 1rem); /* each item takes ~1/3 of row */
+  text-align: center;
 }
 
 .skills-list li:hover {
-  background: rgba(0,212,255,0.3);
+  background: rgba(0, 212, 255, 0.3);
   transform: scale(1.05);
 }
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .skills-list li {
+    flex: 1 1 45%; /* two per row */
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .skills-list li {
+    flex: 1 1 90%; /* one per row */
+  }
+}
+
+
 
 /* === CONTACT FORM === */
 #contact {

@@ -250,3 +250,93 @@ function showStatus(message, type) {
     status.style.opacity = "0";
   }, 5000);
 }
+
+//projects section
+const gallery = document.querySelector(".scroll-gallery");
+let scrollSpeed = 0;
+let position = 0;
+let isDragging = false;
+let startX, scrollLeft;
+
+// 🔁 Clone content for infinite scroll illusion
+function cloneGallery() {
+  const clones = gallery.innerHTML;
+  gallery.insertAdjacentHTML("beforeend", clones);
+}
+cloneGallery();
+
+// 🧭 Handle mouse wheel
+window.addEventListener("wheel", (e) => {
+  scrollSpeed += e.deltaY * 0.004; // faster speed
+});
+
+// 🖱️ Handle click + drag for horizontal scroll
+gallery.addEventListener("mousedown", (e) => {
+  isDragging = true;
+  startX = e.pageX - gallery.offsetLeft;
+  scrollLeft = position;
+  scrollSpeed = 0; // Reset speed to prevent momentum during drag
+  gallery.style.cursor = "grabbing";
+});
+
+gallery.addEventListener("mouseleave", () => {
+  isDragging = false;
+  gallery.style.cursor = "grab";
+});
+
+gallery.addEventListener("mouseup", () => {
+  isDragging = false;
+  gallery.style.cursor = "grab";
+});
+
+gallery.addEventListener("mousemove", (e) => {
+  if (!isDragging) return;
+  e.preventDefault();
+  const x = e.pageX - gallery.offsetLeft;
+  const walk = (x - startX) * 1; // drag sensitivity
+  position = scrollLeft - walk;
+});
+
+// 🌀 Animate continuous scroll
+function loopScroll() {
+  // Only apply scrollSpeed when not dragging to avoid interference
+  if (!isDragging) {
+    position += scrollSpeed;
+  }
+  gallery.style.transform = `translateX(${-position}px)`;
+  scrollSpeed *= 0.93;
+
+  const totalWidth = gallery.scrollWidth / 2;
+  // Smooth reset: instead of snapping to 0 or totalWidth, adjust by totalWidth to maintain continuity
+  if (position >= totalWidth) {
+    position -= totalWidth;
+  } else if (position < 0) {
+    position += totalWidth;
+  }
+
+  requestAnimationFrame(loopScroll);
+}
+loopScroll();
+
+// 🔗 Clickable cards
+document.querySelectorAll(".project-card").forEach(card => {
+  card.addEventListener("click", () => {
+    const link = card.dataset.link;
+    if (link) window.open(link, "_blank");
+  });
+});
+
+
+//skills section
+const skillsList = document.querySelector(".skills-list");
+let timeout;
+
+skillsList.addEventListener("mouseenter", () => {
+  clearTimeout(timeout);
+  skillsList.classList.add("active");
+
+  // Stack back after 5 seconds
+  timeout = setTimeout(() => {
+    skillsList.classList.remove("active");
+  }, 3000);
+});
