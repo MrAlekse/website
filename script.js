@@ -50,14 +50,14 @@ class Particle {
     // gentle attraction zone
     if (distance < mouse.radius && distance > 0) {
         // strength weakens with distance
-        const attraction = (1 - distance / mouse.radius) * 0.003; // lower = calmer
+        const attraction = (1 - distance / mouse.radius) * 0.002; // lower = calmer
         this.x += dx * attraction;
         this.y += dy * attraction;
     }
 
     // normal floating movement
-    this.x += this.directionX * 0.03; // slow drifting
-    this.y += this.directionY * 0.03;
+    this.x += this.directionX * 0.013; // slow drifting
+    this.y += this.directionY * 0.013;
 
     this.draw();
 }
@@ -77,7 +77,6 @@ function init() {
         particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
     }
 }
-
 
 function connect() {
     let opacityValue = 1;
@@ -112,7 +111,6 @@ function animate() {
     connect();
 }
 
-
 function resizeCanvas() {
   const width = window.innerWidth;
   const height = window.innerHeight;
@@ -145,7 +143,7 @@ window.addEventListener('orientationchange', () => {
 });
 animate();
 
-const words = ["FullStack Developer", "Web Developer", "App Developer", "Programer", "Frontend Developer", "Video Editor", "Graphic Designer", "Photographer", "Power Point Designer"];
+const words = ["Web Developer", "App Developer", "Frontend Developer", "Video Editor", "Graphic Designer", "Photographer", "Power Point Designer"];
   const wordElement = document.getElementById("word");
 
   let wordIndex = 0;
@@ -214,3 +212,41 @@ document.addEventListener("DOMContentLoaded", () => {
 
   observer.observe(aboutSection);
 });
+
+//contact section 
+const form = document.getElementById("contact-form");
+const status = document.getElementById("form-status");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const data = new FormData(form);
+
+  try {
+    const response = await fetch(form.action, {
+      method: form.method,
+      body: data,
+      headers: { Accept: "application/json" },
+    });
+
+    if (response.ok) {
+      showStatus("✅ Message sent successfully!", "success");
+      form.reset();
+    } else {
+      showStatus("❌ Oops! Something went wrong. Please try again.", "error");
+    }
+  } catch (error) {
+    showStatus("❌ Network error. Please check your connection.", "error");
+  }
+});
+
+function showStatus(message, type) {
+  status.textContent = message;
+  status.className = type;
+  status.style.opacity = "1"; // fully visible
+
+  // Fade out after 5 seconds
+  setTimeout(() => {
+    status.style.transition = "opacity 0.8s ease";
+    status.style.opacity = "0";
+  }, 5000);
+}
