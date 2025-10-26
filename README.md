@@ -1,2 +1,2 @@
-# website
-have to finish it in one week
+# MyWebsite
+Showcase my skills and creativity
