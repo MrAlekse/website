@@ -381,3 +381,11 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+//mobile
+if (window.innerWidth > 768) {
+  skillsList.addEventListener("mouseenter", () => {
+    skillsList.classList.add("active");
+    // stacking timeout
+  });
+}
+
