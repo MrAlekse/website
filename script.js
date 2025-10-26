@@ -50,14 +50,14 @@ class Particle {
     // gentle attraction zone
     if (distance < mouse.radius && distance > 0) {
         // strength weakens with distance
-        const attraction = (1 - distance / mouse.radius) * 0.002; // lower = calmer
+        const attraction = (1 - distance / mouse.radius) * 0.001; // lower = calmer
         this.x += dx * attraction;
         this.y += dy * attraction;
     }
 
     // normal floating movement
-    this.x += this.directionX * 0.013; // slow drifting
-    this.y += this.directionY * 0.013;
+    this.x += this.directionX * 0.017; // slow drifting
+    this.y += this.directionY * 0.017;
 
     this.draw();
 }
@@ -334,14 +334,27 @@ document.querySelectorAll(".project-card").forEach(card => {
 const skillsList = document.querySelector(".skills-list");
 let timeout;
 
+function stackBack() {
+  // Add a temporary class for smooth collapse
+  skillsList.classList.add("stacking");
+  
+  // Wait for the CSS transition to finish, then remove active
+  setTimeout(() => {
+    skillsList.classList.remove("active", "stacking");
+  }, 500); // match this duration with CSS
+}
+
 // Spread skills on hover
 skillsList.addEventListener("mouseenter", () => {
   clearTimeout(timeout);
   skillsList.classList.add("active");
-
-  // Stack back after 3 seconds
-  timeout = setTimeout(() => {
-    skillsList.classList.remove("active");
-  }, 3000);
+  skillsList.classList.remove("stacking"); // cancel any collapse animation
 });
+
+// Start 5s timer when leaving
+skillsList.addEventListener("mouseleave", () => {
+  clearTimeout(timeout);
+  timeout = setTimeout(stackBack, 5000);
+});
+
 
