@@ -252,6 +252,7 @@ function showStatus(message, type) {
 }
 
 //projects section
+//projects section
 const gallery = document.querySelector(".scroll-gallery");
 let scrollSpeed = 0;
 let position = 0;
@@ -267,7 +268,7 @@ cloneGallery();
 
 // 🧭 Handle mouse wheel
 window.addEventListener("wheel", (e) => {
-  scrollSpeed += e.deltaY * 0.004; // faster speed
+  scrollSpeed += e.deltaY * 0.1; // faster speed
 });
 
 // 🖱️ Handle click + drag for horizontal scroll
@@ -293,26 +294,27 @@ gallery.addEventListener("mousemove", (e) => {
   if (!isDragging) return;
   e.preventDefault();
   const x = e.pageX - gallery.offsetLeft;
-  const walk = (x - startX) * 1; // drag sensitivity
+  const walk = (x - startX) * 3; // drag sensitivity
   position = scrollLeft - walk;
 });
 
 // 🌀 Animate continuous scroll
 function loopScroll() {
-  // Only apply scrollSpeed when not dragging to avoid interference
+  // Only apply scrollSpeed when not dragging
   if (!isDragging) {
     position += scrollSpeed;
   }
-  gallery.style.transform = `translateX(${-position}px)`;
-  scrollSpeed *= 0.93;
 
   const totalWidth = gallery.scrollWidth / 2;
-  // Smooth reset: instead of snapping to 0 or totalWidth, adjust by totalWidth to maintain continuity
-  if (position >= totalWidth) {
-    position -= totalWidth;
-  } else if (position < 0) {
-    position += totalWidth;
-  }
+
+  // Smooth wrap using modulo (handles negative positions too)
+  position = ((position % totalWidth) + totalWidth) % totalWidth;
+
+  // Apply transform
+  gallery.style.transform = `translateX(${-position}px)`;
+
+  // Apply friction
+  scrollSpeed *= 0.93;
 
   requestAnimationFrame(loopScroll);
 }
@@ -327,16 +329,19 @@ document.querySelectorAll(".project-card").forEach(card => {
 });
 
 
+
 //skills section
 const skillsList = document.querySelector(".skills-list");
 let timeout;
 
+// Spread skills on hover
 skillsList.addEventListener("mouseenter", () => {
   clearTimeout(timeout);
   skillsList.classList.add("active");
 
-  // Stack back after 5 seconds
+  // Stack back after 3 seconds
   timeout = setTimeout(() => {
     skillsList.classList.remove("active");
   }, 3000);
 });
+
