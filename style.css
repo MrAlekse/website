@@ -833,14 +833,35 @@ section h2::after {
 }
 
 /* Projects */
+/* === PROJECTS === */
+#projects {
+  text-align: center;
+  padding: 5rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
 .scroll-gallery {
   display: flex;
   gap: 2rem;
   width: max-content;
+  transform: translateX(0);
   transition: transform 0.1s linear;
+  will-change: transform;
   cursor: grab;
+  overflow-x: auto; /* allow horizontal scroll on smaller screens */
+  padding-bottom: 1rem; /* space for scrollbar */
+  scroll-behavior: smooth;
 }
-.scroll-gallery:active { cursor: grabbing; }
+
+.scroll-gallery::-webkit-scrollbar {
+  height: 6px;
+}
+
+.scroll-gallery::-webkit-scrollbar-thumb {
+  background: rgba(0,212,255,0.5);
+  border-radius: 3px;
+}
 
 .project-card {
   display: flex;
@@ -854,10 +875,62 @@ section h2::after {
   transition: transform 0.3s, box-shadow 0.3s;
   cursor: pointer;
 }
-.project-card img { width: 100%; height: 200px; object-fit: cover; border-bottom: 2px solid #38bdf8; border-radius: 10px; }
-.project-card:hover { transform: scale(1.05); box-shadow: 0 0 25px rgba(56,189,248,0.5); }
 
-/* Skills */
+.project-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-bottom: 2px solid #38bdf8;
+  border-radius: 10px;
+}
+
+.project-card h3 {
+  color: #fff;
+  font-size: 1.2rem;
+  margin: 1rem 0;
+  text-shadow: 0 0 5px rgba(0,255,255,0.5);
+}
+
+.project-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 25px rgba(56,189,248,0.5);
+}
+
+/* === MOBILE RESPONSIVE === */
+@media (max-width: 768px) {
+  #projects {
+    padding: 4rem 1.5rem;
+  }
+  
+  .scroll-gallery {
+    flex-wrap: wrap;          /* wrap cards into multiple rows */
+    width: 100%;              /* fill container */
+    justify-content: center;  /* center cards */
+    overflow-x: visible;      /* no horizontal scroll */
+  }
+  
+  .project-card {
+    min-width: 90%;           /* almost full width on mobile */
+    margin-bottom: 1.5rem;    /* space between rows */
+  }
+}
+
+@media (max-width: 480px) {
+  .project-card {
+    min-width: 100%;          /* full width on small phones */
+    padding: 0.8rem;
+  }
+  
+  .project-card h3 {
+    font-size: 1rem;
+  }
+
+  .scroll-gallery {
+    gap: 1rem;
+  }
+}
+
+/* === SKILLS === */
 .skills-list {
   display: flex;
   flex-wrap: wrap;
@@ -869,6 +942,8 @@ section h2::after {
   position: relative;
   transition: all 0.5s ease;
 }
+
+/* Desktop stacking (initial) */
 .skills-list li {
   position: absolute;
   top: 50%;
@@ -881,9 +956,38 @@ section h2::after {
   backdrop-filter: blur(6px);
   border: 1px solid rgba(0,212,255,0.25);
   box-shadow: 0 0 12px rgba(0,212,255,0.15);
-  transition: transform 0.7s cubic-bezier(0.68,-0.55,0.27,1.55), background 0.3s, box-shadow 0.3s;
+  transition: transform 0.7s cubic-bezier(0.68,-0.55,0.27,1.55),
+              background 0.3s, box-shadow 0.3s;
   cursor: pointer;
 }
+
+/* Spread effect when active on desktop */
+.skills-list.active li {
+  position: relative; /* allow flex layout */
+  transform: none;
+  flex: 1 1 calc(30% - 1rem); /* 3 per row on desktop */
+}
+
+/* === MOBILE & TABLET FIX === */
+@media (max-width: 768px) {
+  .skills-list.active {
+    justify-content: center; /* center items */
+  }
+  .skills-list.active li {
+    flex: 1 1 45%; /* two per row */
+    position: relative !important; /* override absolute */
+    transform: none !important;   /* remove stacking transform */
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .skills-list.active li {
+    flex: 1 1 100%; /* one per row */
+    text-align: center;
+  }
+}
+
 
 /* Active Spread */
 .skills-list.active li { position: relative; transform: none; flex: 1 1 calc(30% - 1rem); }
@@ -952,4 +1056,8 @@ footer { text-align: center; padding: 2rem; background: rgba(0,0,0,0.5); font-si
 
   /* Skills list one per row */
   .skills-list.active li { flex: 1 1 100%; }
+}
+.nav-links {
+  transition: max-height 0.4s ease;
+  overflow: hidden;
 }

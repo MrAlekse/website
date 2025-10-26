@@ -358,3 +358,26 @@ skillsList.addEventListener("mouseleave", () => {
 });
 
 
+//nav
+ // Wait until DOM is fully loaded
+document.addEventListener('DOMContentLoaded', () => {
+  const menuToggle = document.querySelector('#menu-toggle'); // matches your HTML id
+  const navLinks = document.querySelector('.nav-links');
+
+  // Toggle menu on click
+  menuToggle.addEventListener('click', () => {
+    menuToggle.classList.toggle('active'); // hamburger animation
+    navLinks.classList.toggle('open');     // expand/collapse links
+  });
+
+  // Optional: close menu when a link is clicked (mobile friendly)
+  navLinks.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      if (navLinks.classList.contains('open')) {
+        navLinks.classList.remove('open');
+        menuToggle.classList.remove('active');
+      }
+    });
+  });
+});
+
