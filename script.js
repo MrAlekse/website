@@ -66,7 +66,7 @@ class Particle {
 
 function init() {
     particlesArray = [];
-    let numberOfParticles = (canvas.height * canvas.width) / 19000;
+    let numberOfParticles = (canvas.height * canvas.width) / 25000;
     for (let i = 0; i < numberOfParticles; i++) {
         let size = (Math.random() * 5) + 1;
         let x = Math.random() * canvas.width;
