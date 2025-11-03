@@ -51,15 +51,15 @@ class Particle {
       const maxRange = 250; // attraction range in px
 
       if (dist < maxRange) {
-        const strength = (1 - dist / maxRange) * 0.1; // 0.1 = attraction strength
+        const strength = (1 - dist / maxRange) * 0.002; // 0.01 = attraction strength
         this.x += dx * strength;
         this.y += dy * strength;
       }
     }
 
     // Natural floating
-    this.x += this.dx * 0.3;
-    this.y += this.dy * 0.3;
+    this.x += this.dx * 0.07;
+    this.y += this.dy * 0.07;
 
     this.draw();
   }
@@ -68,22 +68,22 @@ class Particle {
 // === Init particles ===
 function init() {
   particlesArray = [];
-  const count = Math.min(120, Math.floor((canvas.width * canvas.height) / 40000));
+  const count = Math.min(120, Math.floor((canvas.width * canvas.height) / 20000));
 
   for (let i = 0; i < count; i++) {
-    const size = Math.random() * 2 + 1;
+    const size = Math.random() * 2 + 2;
     const x = Math.random() * canvas.width;
     const y = Math.random() * canvas.height;
     const dx = (Math.random() - 0.5);
     const dy = (Math.random() - 0.5);
-    const color = 'rgba(255,255,255,0.9)';
+    const color = 'rgba(255, 255, 255, 1)';
     particlesArray.push(new Particle(x, y, dx, dy, size, color));
   }
 }
 
 // === Connect particles ===
 function connect() {
-  const maxDist = 120;
+  const maxDist = 150;
   for (let a = 0; a < particlesArray.length; a++) {
     for (let b = a + 1; b < particlesArray.length; b++) {
       const dx = particlesArray[a].x - particlesArray[b].x;
@@ -113,16 +113,19 @@ function animate() {
 // === Resize ===
 function resizeCanvas() {
   const width = window.innerWidth;
-  const height = window.innerHeight;
+  const height = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+
   const dpr = window.devicePixelRatio || 1;
   canvas.width = width * dpr;
   canvas.height = height * dpr;
   canvas.style.width = width + 'px';
   canvas.style.height = height + 'px';
+
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.scale(dpr, dpr);
   init();
 }
+
 
 window.addEventListener('resize', resizeCanvas);
 window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 500));
