@@ -15,7 +15,9 @@ html, body {
   background: transparent;
   scroll-behavior: smooth;
   overflow-x: hidden;
+  transition: background 0.3s ease;
 }
+
 
 /* === BACKGROUND CANVAS === */
 #canvas1 {
@@ -23,10 +25,11 @@ html, body {
   top: 0;
   left: 0;
   width: 100vw;
-  height: calc(var(--vh, 1vh) * 150); /* same 150vh effect but responsive */
+  height: calc(var(--vh, 1vh) * 100%); /* same 150vh effect but responsive */
   z-index: -1;
   background: radial-gradient(#9DCDDC, #5692A9, #044568);
   touch-action: none;
+  display: block;
 }
 
 
@@ -106,11 +109,6 @@ nav {
 .word {
   color: #38bdf8;
   -webkit-text-stroke: 1px #2b00ff;
-  text-shadow:
-    -1px -1px 0 #2b00ff,
-    1px -1px 0 #2b00ff,
-    -1px  1px 0 #2b00ff,
-    1px  1px 0 #2b00ff;
   transition: opacity 0.5s ease;
 }
 /* About Section Styling */
