@@ -134,6 +134,24 @@ window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 500)
 resizeCanvas();
 animate();
 
+function setVhUnit() {
+  // 1vh = 1% of the visual viewport height
+  const vh = (window.visualViewport ? window.visualViewport.height : window.innerHeight) * 0.01;
+  document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
+
+// Run once on load
+setVhUnit();
+
+// Update on resize/orientation change
+window.addEventListener('resize', setVhUnit);
+window.addEventListener('orientationchange', () => setTimeout(setVhUnit, 300));
+
+// On mobile viewport UI changes (for iOS Safari, Chrome)
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', setVhUnit);
+}
+
 
 
 //typing animation
