@@ -23,11 +23,13 @@ html, body {
   top: 0;
   left: 0;
   width: 100vw;
-  height: 150vh;
+  height: calc(var(--vh, 1vh) * 150); /* same 150vh effect but responsive */
   z-index: -1;
   background: radial-gradient(#9DCDDC, #5692A9, #044568);
   touch-action: none;
 }
+
+
 
 /* === NAVBAR === */
 header {

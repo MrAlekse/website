@@ -149,8 +149,12 @@ window.addEventListener('orientationchange', () => setTimeout(setVhUnit, 300));
 
 // On mobile viewport UI changes (for iOS Safari, Chrome)
 if (window.visualViewport) {
-  window.visualViewport.addEventListener('resize', setVhUnit);
+  window.visualViewport.addEventListener('resize', () => {
+    setVhUnit();
+    resizeCanvas();
+  });
 }
+
 
 
 
