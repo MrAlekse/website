@@ -1,148 +1,139 @@
 const canvas = document.getElementById('canvas1');
-const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+const ctx = canvas.getContext('2d', { alpha: true });
 
-let particlesArray;
+let particlesArray = [];
+let mouse = { x: null, y: null, active: false };
 
-let mouse = {
-    x: null,
-    y: null,
-    radius: 50
+// === Handle mouse & touch ===
+function setMousePosition(x, y) {
+  mouse.x = x;
+  mouse.y = y;
+  mouse.active = true;
 }
 
-window.addEventListener('mousemove', function(event) {
-        mouse.x = event.x;
-        mouse.y = event.y;
-    }
-);
+window.addEventListener('mousemove', e => setMousePosition(e.x, e.y));
+window.addEventListener('mouseleave', () => mouse.active = false);
 
+window.addEventListener('touchmove', e => {
+  const touch = e.touches[0];
+  if (touch) setMousePosition(touch.clientX, touch.clientY);
+}, { passive: true });
+window.addEventListener('touchend', () => mouse.active = false);
+
+// === Particle class ===
 class Particle {
-    constructor(x, y, directionX, directionY, size, color) {
-        this.x = x;
-        this.y = y;
-        this.directionX = directionX;
-        this.directionY = directionY;
-        this.size = size;
-        this.color = color;
+  constructor(x, y, dx, dy, size, color) {
+    this.x = x;
+    this.y = y;
+    this.dx = dx;
+    this.dy = dy;
+    this.size = size;
+    this.color = color;
+  }
+
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+    ctx.fillStyle = this.color;
+    ctx.fill();
+  }
+
+  update() {
+    // Bounce off walls
+    if (this.x > canvas.width || this.x < 0) this.dx = -this.dx;
+    if (this.y > canvas.height || this.y < 0) this.dy = -this.dy;
+
+    // Attraction effect (stronger when closer)
+    if (mouse.active) {
+      const dx = mouse.x - this.x;
+      const dy = mouse.y - this.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const maxRange = 250; // attraction range in px
+
+      if (dist < maxRange) {
+        const strength = (1 - dist / maxRange) * 0.1; // 0.1 = attraction strength
+        this.x += dx * strength;
+        this.y += dy * strength;
+      }
     }
 
-    draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
-        ctx.fillStyle = '#ffffffff';
-        ctx.fill();
-    } 
-   update() {
-    // bounce off canvas edges
-    if (this.x > canvas.width || this.x < 0) {
-        this.directionX = -this.directionX;
-    }
-    if (this.y > canvas.height || this.y < 0) {
-        this.directionY = -this.directionY;
-    }
-
-    // distance from mouse
-    let dx = mouse.x - this.x;
-    let dy = mouse.y - this.y;
-    let distance = Math.sqrt(dx * dx + dy * dy);
-
-    // gentle attraction zone
-    if (distance < mouse.radius && distance > 0) {
-        // strength weakens with distance
-        const attraction = (1 - distance / mouse.radius) * 0.001; // lower = calmer
-        this.x += dx * attraction;
-        this.y += dy * attraction;
-    }
-
-    // normal floating movement
-    this.x += this.directionX * 0.017; // slow drifting
-    this.y += this.directionY * 0.017;
+    // Natural floating
+    this.x += this.dx * 0.3;
+    this.y += this.dy * 0.3;
 
     this.draw();
+  }
 }
 
-}
-
+// === Init particles ===
 function init() {
-    particlesArray = [];
-    let numberOfParticles = (canvas.height * canvas.width) / 30000;
-    for (let i = 0; i < numberOfParticles; i++) {
-        let size = (Math.random() * 5) + 1;
-        let x = Math.random() * canvas.width;
-        let y = Math.random() * canvas.height;
-        let directionX = (Math.random() * 3) - 0.15; // small movement
-        let directionY = (Math.random() * 3) - 0.15;
-        let color = '#000000ff';
-        particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
-    }
+  particlesArray = [];
+  const count = Math.min(120, Math.floor((canvas.width * canvas.height) / 40000));
+
+  for (let i = 0; i < count; i++) {
+    const size = Math.random() * 2 + 1;
+    const x = Math.random() * canvas.width;
+    const y = Math.random() * canvas.height;
+    const dx = (Math.random() - 0.5);
+    const dy = (Math.random() - 0.5);
+    const color = 'rgba(255,255,255,0.9)';
+    particlesArray.push(new Particle(x, y, dx, dy, size, color));
+  }
 }
 
+// === Connect particles ===
 function connect() {
-    let opacityValue = 1;
-    for (let a = 0; a < particlesArray.length; a++) {
-        for (let b = a; b < particlesArray.length; b++) {
-            let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x)) +
-                           ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
-            if (distance < (canvas.width / 7) * (canvas.height / 7)) {
-                // make opacity decrease smoothly with distance
-                opacityValue = 1 - distance / ((canvas.width / 7) * (canvas.height / 7));
-                if (opacityValue < 0) opacityValue = 0;
-                
-                ctx.strokeStyle = `rgba(255, 255, 255, ${opacityValue})`; // white fading lines
-                ctx.lineWidth = 1;
-                ctx.beginPath();
-                ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
-                ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
-                ctx.stroke();
-                ctx.lineWidth = opacityValue * 1 + 0.5; // Stroke size varies with opacity (distance)
-                ctx.closePath();
-            }
-        }
+  const maxDist = 120;
+  for (let a = 0; a < particlesArray.length; a++) {
+    for (let b = a + 1; b < particlesArray.length; b++) {
+      const dx = particlesArray[a].x - particlesArray[b].x;
+      const dy = particlesArray[a].y - particlesArray[b].y;
+      const dist = dx * dx + dy * dy;
+      if (dist < maxDist * maxDist) {
+        const opacity = 1 - dist / (maxDist * maxDist);
+        ctx.strokeStyle = `rgba(255,255,255,${opacity})`;
+        ctx.lineWidth = opacity;
+        ctx.beginPath();
+        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+        ctx.stroke();
+      }
     }
+  }
 }
+
+// === Animation ===
 function animate() {
-    requestAnimationFrame(animate);
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (let i = 0; i < particlesArray.length; i++) {
-        particlesArray[i].update();
-    }
-
-    connect();
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particlesArray.forEach(p => p.update());
+  connect();
+  requestAnimationFrame(animate);
 }
 
+// === Resize ===
 function resizeCanvas() {
   const width = window.innerWidth;
   const height = window.innerHeight;
-
-  // Set canvas resolution
   const dpr = window.devicePixelRatio || 1;
   canvas.width = width * dpr;
   canvas.height = height * dpr;
   canvas.style.width = width + 'px';
   canvas.style.height = height + 'px';
-
-  // Reset transform before scaling to avoid compounding
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.scale(dpr, dpr);
-
-  // Adjust mouse radius (use logical pixels)
-  mouse.radius = ((height / 80) * (width / 80));
-
-init();
-
+  init();
 }
-resizeCanvas();
 
-// 🔁 Listen for resize
 window.addEventListener('resize', resizeCanvas);
+window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 500));
 
-// ✅ Optional: handle mobile orientation changes too
-window.addEventListener('orientationchange', () => {
-  setTimeout(resizeCanvas, 500);
-});
+// === Start ===
+resizeCanvas();
 animate();
 
+
+
+//typing animation
 const words = ["Web Developer", "App Developer", "Frontend Developer", "Video Editor", "Graphic Designer", "Photographer", "Power Point Designer"];
   const wordElement = document.getElementById("word");
 
