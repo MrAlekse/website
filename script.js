@@ -159,8 +159,6 @@ if (window.visualViewport) {
 
 
 
-
-
 //typing animation
 const words = ["Web Developer", "App Developer", "Frontend Developer", "Video Editor", "Graphic Designer", "Photographer", "Power Point Designer"];
   const wordElement = document.getElementById("word");
@@ -350,31 +348,32 @@ document.querySelectorAll(".project-card").forEach(card => {
 
 
 //skills section
-const skillsList = document.querySelector(".skills-list");
-let timeout;
+const btn = document.getElementById("skills-button");
+const list = document.querySelector(".skills-list");
+let retractTimeout;
 
-function stackBack() {
-  // Add a temporary class for smooth collapse
-  skillsList.classList.add("stacking");
-  
-  // Wait for the CSS transition to finish, then remove active
-  setTimeout(() => {
-    skillsList.classList.remove("active", "stacking");
-  }, 500); // match this duration with CSS
-}
+btn.addEventListener("mouseenter", () => {
+  clearTimeout(retractTimeout);
+  list.classList.add("reveal");
 
-// Spread skills on hover
-skillsList.addEventListener("mouseenter", () => {
-  clearTimeout(timeout);
-  skillsList.classList.add("active");
-  skillsList.classList.remove("stacking"); // cancel any collapse animation
+  // Animate each skill one by one
+  const items = list.querySelectorAll("li");
+  items.forEach((li, i) => {
+    li.style.transitionDelay = `${i * 0.1}s`; // small stagger
+  });
 });
 
-// Start 5s timer when leaving
-skillsList.addEventListener("mouseleave", () => {
-  clearTimeout(timeout);
-  timeout = setTimeout(stackBack, 5000);
+btn.addEventListener("mouseleave", () => {
+  retractTimeout = setTimeout(() => {
+    list.classList.remove("reveal");
+    const items = list.querySelectorAll("li");
+    items.forEach(li => li.style.transitionDelay = "0s");
+  }, 10000);
 });
 
-
-
+list.addEventListener("mouseenter", () => clearTimeout(retractTimeout));
+list.addEventListener("mouseleave", () => {
+  retractTimeout = setTimeout(() => {
+    list.classList.remove("reveal");
+  }, 10000);
+});
